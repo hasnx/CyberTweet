@@ -1,66 +1,111 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CyberTweet
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A cyberpunk-themed social network with real-time interactions and a neon-soaked UI.
 
-## About Laravel
+## ⚡ Core Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 🔐 Authentication & Profiles
+- Secure user registration and login
+- Customizable user profiles
+- Username generation system
+- Profile photo support
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📱 Social Features
+- Create and share posts
+- Like and repost functionality
+- User following system
+- Real-time feed updates
+- Profile statistics tracking
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### #️⃣ Content Organization
+- Hashtag system
+- Trending topics
+- Advanced search functionality
+- Post categorization
 
-## Learning Laravel
+### 🎨 Cyberpunk UI
+- Neon color scheme
+- Glitch effects
+- Responsive design
+- Dark mode optimized
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🚀 Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Backend:** Laravel 10.x
+- **Frontend:** Vue.js 3
+- **Styling:** Tailwind CSS
+- **Bridge:** Inertia.js
+- **Database:** PostgreSQL
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 💻 Requirements
 
-## Laravel Sponsors
+- PHP >= 8.1
+- Node.js >= 16.x
+- Composer
+- PostgreSQL
+- Git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🔧 Installation
 
-### Premium Partners
+1. Clone and setup
+```bash
+git clone <repository-url>
+cd cybertweet
+composer install
+npm install
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+2. Environment
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Contributing
+3. Database
+```bash
+php artisan migrate:fresh --seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. Development servers
+```bash
+php artisan serve
+npm run dev
+```
 
-## Code of Conduct
+## 🛠️ Key Components
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Posts:** Create, like, repost
+- **Profiles:** Follow, stats, customization
+- **Search:** Users, posts, hashtags
+- **Feed:** Real-time updates
+- **Hashtags:** Trending, categorization
 
-## Security Vulnerabilities
+## 🎨 Features
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Cyberpunk-themed UI
+- Real-time updates
+- User following system
+- Hashtag system
+- Post interactions
+- Search functionality
 
-## License
+## 📝 Development
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Routes:** `routes/web.php`
+- **Components:** `resources/js/Pages`
+- **Styling:** `resources/css/app.css`
+
+## 🔐 Security
+
+- Secure authentication
+- CORS protection
+- Rate limiting
+- XSS prevention
+- CSRF protection
+
+## 📄 License
+
+[MIT License](LICENSE.md)
+
+---
+*Connecting users in the digital frontier* 🌃
