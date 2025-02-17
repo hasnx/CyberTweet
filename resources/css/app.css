@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'cyberpunk.css';
+
 [x-cloak] {
     display: none;
 }

@@ -1,148 +1,28 @@
 <template>
     <CyberLayout :auth="auth">
         <div class="max-w-2xl">
-            <!-- Post Creation -->
-            <div
-                class="mb-8 bg-gray-900 p-4 rounded-lg border border-neon-pink"
-            >
-                <form @submit.prevent="submitPost">
-                    <div class="relative">
-                        <textarea
-                            v-model="newPost.content"
-                            class="w-full bg-gray-800 text-neon-blue border-none rounded p-3 focus:ring-2 focus:ring-neon-pink"
-                            placeholder="What's happening in Night City?"
-                            rows="3"
-                            maxlength="280"
-                        ></textarea>
-                        <div
-                            class="absolute bottom-3 right-3 flex items-center space-x-2"
-                        >
-                            <div class="relative w-8 h-8">
-                                <svg class="w-8 h-8 transform -rotate-90">
-                                    <circle
-                                        cx="16"
-                                        cy="16"
-                                        r="14"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        fill="none"
-                                        class="text-gray-700"
-                                    />
-                                    <circle
-                                        cx="16"
-                                        cy="16"
-                                        r="14"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        fill="none"
-                                        :stroke-dasharray="circumference"
-                                        :stroke-dashoffset="dashOffset"
-                                        class="text-neon-pink transition-all duration-200"
-                                    />
-                                </svg>
-                                <span
-                                    class="absolute inset-0 flex items-center justify-center text-xs text-neon-pink"
-                                >
-                                    {{ 280 - newPost.content.length }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-end mt-2">
-                        <button
-                            type="submit"
-                            class="bg-neon-pink hover:bg-neon-pink/80 text-black px-6 py-2 rounded-full font-bold transition-all duration-300 shadow-neon"
-                        >
-                            UPLOAD TO NETWORK
-                        </button>
-                    </div>
-                </form>
-            </div>
+            <!-- Create Post -->
+            <CreatePost :auth="auth" class="mb-8" />
 
             <!-- Posts Feed -->
             <div class="space-y-4">
-                <div
+                <PostItem
                     v-for="post in posts"
                     :key="post.id"
-                    class="bg-gray-900 p-4 rounded-lg border border-neon-blue hover:border-neon-pink transition-all duration-300"
-                >
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-1">
-                            <div class="flex items-center space-x-2">
-                                <Link
-                                    :href="route('profile.show', post.user.id)"
-                                    class="font-bold text-neon-pink hover:text-neon-blue transition-all duration-300 relative group"
-                                >
-                                    {{ post.user.name }}
-                                    <span
-                                        class="absolute inset-0 bg-neon-pink/20 opacity-0 group-hover:opacity-100 blur transition-opacity"
-                                    ></span>
-                                </Link>
-                                <span class="text-gray-500">{{
-                                    formatDate(post.created_at)
-                                }}</span>
-                            </div>
-                            <p class="mt-2 text-white">{{ post.content }}</p>
-                            <div class="mt-4 flex space-x-6">
-                                <button
-                                    @click="likePost(post)"
-                                    class="flex items-center space-x-2 hover-glitch"
-                                    :class="{
-                                        'text-neon-pink': post.liked,
-                                        'text-gray-400 hover:text-neon-pink':
-                                            !post.liked,
-                                    }"
-                                    :data-text="post.likes_count + ' Likes'"
-                                >
-                                    <component
-                                        :is="
-                                            post.liked
-                                                ? HeartIcon
-                                                : HeartOutlineIcon
-                                        "
-                                        class="w-5 h-5 icon-glitch"
-                                    />
-                                    <span>{{ post.likes_count }}</span>
-                                    <span>Likes</span>
-                                </button>
-                                <button
-                                    @click="repostPost(post)"
-                                    class="flex items-center space-x-2"
-                                    :class="{
-                                        'text-neon-blue': post.reposted,
-                                        'text-gray-400 hover:text-neon-blue':
-                                            !post.reposted,
-                                    }"
-                                >
-                                    <component
-                                        :is="
-                                            post.reposted
-                                                ? ArrowPathIcon
-                                                : ArrowPathOutlineIcon
-                                        "
-                                        class="w-5 h-5"
-                                    />
-                                    <span>{{ post.reposts_count }}</span>
-                                    <span>Reposts</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    :post="post"
+                    @like="likePost"
+                    @repost="repostPost"
+                />
             </div>
         </div>
     </CyberLayout>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useForm, router, Link } from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
 import CyberLayout from "@/Layouts/CyberLayout.vue";
-import { HeartIcon, ArrowPathIcon } from "@heroicons/vue/24/solid";
-import {
-    HeartIcon as HeartOutlineIcon,
-    ArrowPathIcon as ArrowPathOutlineIcon,
-} from "@heroicons/vue/24/outline";
+import PostItem from "@/Components/PostItem.vue";
+import CreatePost from "@/Components/CreatePost.vue";
 
 const props = defineProps({
     posts: {
@@ -154,18 +34,6 @@ const props = defineProps({
         required: true,
     },
 });
-
-const newPost = useForm({
-    content: "",
-});
-
-const submitPost = () => {
-    newPost.post(route("posts.store"), {
-        onSuccess: () => {
-            newPost.reset();
-        },
-    });
-};
 
 const likePost = (post) => {
     if (post.liked) {
@@ -198,16 +66,6 @@ const repostPost = (post) => {
         );
     }
 };
-
-const formatDate = (date) => {
-    return new Date(date).toLocaleDateString();
-};
-
-const circumference = computed(() => 2 * Math.PI * 14);
-const dashOffset = computed(() => {
-    const progress = newPost.content.length / 280;
-    return circumference.value * (1 - progress);
-});
 </script>
 
 <style>

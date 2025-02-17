@@ -7,6 +7,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\HashtagController;
+use App\Http\Controllers\UsernameController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -22,9 +24,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/', [PostController::class, 'index'])->name('feed');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
@@ -32,9 +32,12 @@ Route::middleware([
     Route::delete('/posts/{post}/like', [PostController::class, 'unlike'])->name('posts.unlike');
     Route::post('/posts/{post}/repost', [PostController::class, 'repost'])->name('posts.repost');
     Route::delete('/posts/{post}/repost', [PostController::class, 'unrepost'])->name('posts.unrepost');
-    Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
-    Route::post('/profile/{user}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
-    Route::delete('/profile/{user}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
+    Route::get('/@{username}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/@{username}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
+    Route::delete('/@{username}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
     Route::get('/search', [SearchController::class, 'index'])->name('search');
     Route::get('/hashtag/{name}', [HashtagController::class, 'show'])->name('hashtag.show');
+    Route::post('/username/check', [UsernameController::class, 'check'])
+        ->name('username.check')
+        ->middleware('auth');
 });

@@ -8,36 +8,59 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
-    public function show(User $user)
+    public function show(User $username)
     {
+        $currentUser = auth()->user();
+
         $stats = [
-            'posts_count' => $user->posts()->count(),
-            'followers_count' => $user->followers()->count(),
-            'following_count' => $user->following()->count(),
+            'posts' => $username->posts()->count(),
+            'following' => $username->following()->count(),
+            'followers' => $username->followers()->count(),
         ];
 
-        $isFollowing = auth()->user()->following()->where('following_id', $user->id)->exists();
+        $posts = $username->posts()
+            ->with('user')
+            ->latest()
+            ->get()
+            ->map(function ($post) use ($currentUser) {
+                $post->liked = $post->likes()->where('user_id', $currentUser->id)->exists();
+                $post->reposted = $post->reposts()->where('user_id', $currentUser->id)->exists();
+                return $post;
+            });
 
-        return Inertia::render('Profile/CyberProfile', [
-            'user' => $user,
-            'posts' => $user->posts()->with('user')->latest()->get(),
+        $likedPosts = $username->likes()
+            ->with('post.user')
+            ->latest()
+            ->get()
+            ->map(function ($like) use ($currentUser) {
+                $post = $like->post;
+                $post->liked = $post->likes()->where('user_id', $currentUser->id)->exists();
+                $post->reposted = $post->reposts()->where('user_id', $currentUser->id)->exists();
+                return $post;
+            });
+
+        $username->isFollowing = $currentUser->following()->where('following_id', $username->id)->exists();
+
+        return Inertia::render('Profile/Show', [
+            'user' => $username,
+            'posts' => $posts,
+            'likedPosts' => $likedPosts,
             'stats' => $stats,
-            'isFollowing' => $isFollowing,
             'auth' => [
-                'user' => auth()->user()
+                'user' => $currentUser
             ]
         ]);
     }
 
-    public function follow(User $user)
+    public function follow(User $username)
     {
-        auth()->user()->following()->attach($user->id);
+        auth()->user()->following()->attach($username->id);
         return redirect()->back();
     }
 
-    public function unfollow(User $user)
+    public function unfollow(User $username)
     {
-        auth()->user()->following()->detach($user->id);
+        auth()->user()->following()->detach($username->id);
         return redirect()->back();
     }
 }

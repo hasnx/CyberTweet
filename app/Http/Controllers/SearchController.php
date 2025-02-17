@@ -17,7 +17,18 @@ class SearchController extends Controller
         $posts = Post::with('user')
             ->where('content', 'like', "%{$query}%")
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($post) use ($currentUser) {
+                $post->liked = $post->likes()->where('user_id', $currentUser->id)->exists();
+                $post->reposted = $post->reposts()->where('user_id', $currentUser->id)->exists();
+                return $post;
+            });
+
+        \Log::info('Search Results:', [
+            'query' => $query,
+            'posts_count' => $posts->count(),
+            'posts' => $posts->toArray()
+        ]);
 
         $users = User::where('name', 'like', "%{$query}%")
             ->orWhere('email', 'like', "%{$query}%")

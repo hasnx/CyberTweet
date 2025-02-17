@@ -31,6 +31,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
     ];
@@ -87,5 +88,10 @@ class User extends Authenticatable
     public function following(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'username';
     }
 }
